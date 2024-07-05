@@ -1,0 +1,56 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Build application
+      run: |
+        pyinstaller --onefile src/app.py
+
+    - name: Deploy to apt repository
+      run: |
+        # Add steps to deploy to apt repository
+        echo "Deploy to apt"
+
+    - name: Deploy to fdroid
+      run: |
+        # Add steps to deploy to fdroid
+        echo "Deploy to fdroid"
+
+    - name: Deploy to Apple App Store
+      run: |
+        gem install fastlane
+        fastlane deploy
+        echo "Deploy to Apple App Store"
+
+    - name: Deploy to Windows Chocolatey
+      run: |
+        # Add steps to deploy to Chocolatey
+        echo "Deploy to Chocolatey"
+
+    - name: Deploy to macOS Homebrew
+      run: |
+        # Add steps to deploy to Homebrew
+        echo "Deploy to Homebrew"

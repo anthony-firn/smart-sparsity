@@ -1,0 +1,14 @@
+BoxLayout:
+    orientation: 'vertical'
+    TextInput:
+        id: input_text
+        hint_text: 'Enter your message here'
+        size_hint: 1, 0.1
+    Button:
+        text: 'Send'
+        size_hint: 1, 0.1
+        on_press: app.send_message()
+    Label:
+        id: output_label
+        text: 'Output will be displayed here'
+        size_hint: 1, 0.8
