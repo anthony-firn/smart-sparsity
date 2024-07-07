@@ -12,7 +12,9 @@ class ModelHandler:
 
     def _download_and_split_model(self, model_name):
         model = AutoModelForCausalLM.from_pretrained(model_name)
+        # Simulating splitting the model into parts
         model_parts = ["part1.pth", "part2.pth", "part3.pth"]
+        torch.save(model, model_parts[0])  # Save the entire model as part1 for simplicity
         return model_parts
 
     def run_inference(self, input_text):
@@ -21,11 +23,12 @@ class ModelHandler:
         for part in self.model_parts:
             if self._can_load_part(part):
                 model_part = self._load_model_part(part)
-                output = model_part(output)
+                with torch.no_grad():
+                    output = model_part(**output)
                 self._unload_model_part(model_part)
             else:
                 raise MemoryError("Not enough memory to load model part")
-        return self.tokenizer.decode(output[0], skip_special_tokens=True)
+        return self.tokenizer.decode(output.logits[0].argmax(dim=-1), skip_special_tokens=True)
 
     def _can_load_part(self, part_path):
         part_size = os.path.getsize(part_path)

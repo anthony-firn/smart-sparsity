@@ -5,11 +5,19 @@ from model_utils import ModelHandler
 class TestModelHandler(unittest.TestCase):
 
     @patch('model_utils.AutoTokenizer.from_pretrained')
-    def setUp(self, MockAutoTokenizer):
+    @patch('model_utils.AutoModelForCausalLM.from_pretrained')
+    @patch('model_utils.torch.load')
+    def setUp(self, MockTorchLoad, MockAutoModel, MockAutoTokenizer):
         mock_tokenizer = MockAutoTokenizer.return_value
         mock_tokenizer.encode.return_value = [101, 102]
         mock_tokenizer.decode.return_value = "Mocked output"
-        self.model_handler = ModelHandler("distilbert-base-uncased")
+
+        mock_model = MockAutoModel.return_value
+        mock_model.return_value = MagicMock()
+        mock_torch_load = MockTorchLoad.return_value
+        mock_torch_load.return_value = mock_model
+
+        self.model_handler = ModelHandler("gpt2")
 
     def test_initialization(self):
         self.assertIsNotNone(self.model_handler.tokenizer)
