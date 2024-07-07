@@ -1,11 +1,11 @@
 # General dependencies
 kivy==2.1.0
 psutil==5.8.0
-torch==1.9.0
+torch==2.3.1
 transformers==4.9.2
 
 # Optional dependencies for building the app (e.g., PyInstaller)
 pyinstaller==4.5.1
 
 # Testing dependencies
-unittest2==1.1.0  # unittest2 is a backport of Python's unittest module for versions before 2.7
+unittest2==1.1.0
