@@ -1,5 +1,4 @@
 import unittest
-from kivy.app import App
 from kivy.uix.textinput import TextInput
 from app import ChatApp
 
