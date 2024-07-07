@@ -7,7 +7,9 @@ class TestModelHandler(unittest.TestCase):
     @patch('model_utils.AutoTokenizer.from_pretrained')
     @patch('model_utils.AutoModelForCausalLM.from_pretrained')
     @patch('model_utils.torch.save', side_effect=lambda obj, path: None)  # Mock torch.save to do nothing
-    def setUp(self, MockTorchSave, MockAutoModel, MockAutoTokenizer):
+    @patch('model_utils.os.path.getsize', return_value=100)  # Mock getsize to return a size value
+    @patch('model_utils.os.path.exists', return_value=True)  # Mock exists to always return True
+    def setUp(self, MockPathExists, MockPathGetSize, MockTorchSave, MockAutoModel, MockAutoTokenizer):
         mock_tokenizer = MockAutoTokenizer.return_value
         mock_tokenizer.encode.return_value = [101, 102]
         mock_tokenizer.decode.return_value = "Mocked output"
@@ -21,7 +23,8 @@ class TestModelHandler(unittest.TestCase):
         self.assertIsNotNone(self.model_handler.tokenizer)
         self.assertIsNotNone(self.model_handler.model_parts)
 
-    def test_inference(self):
+    @patch('model_utils.ModelHandler._load_model_part', return_value=MagicMock())
+    def test_inference(self, MockLoadModelPart):
         input_text = "Hello, world!"
         output = self.model_handler.run_inference(input_text)
         self.assertEqual(output, "Mocked output")

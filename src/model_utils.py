@@ -12,7 +12,6 @@ class ModelHandler:
 
     def _download_and_split_model(self, model_name):
         model = AutoModelForCausalLM.from_pretrained(model_name)
-        # Simulating splitting the model into parts
         model_parts = ["part1.pth", "part2.pth", "part3.pth"]
         if not os.path.exists(model_parts[0]):  # Save the entire model as part1 for simplicity only if it doesn't exist
             torch.save(model, model_parts[0])
