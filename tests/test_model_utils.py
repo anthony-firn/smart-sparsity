@@ -18,11 +18,11 @@ class TestModelHandler(unittest.TestCase):
         mock_model = MockAutoModel.return_value
         mock_model.return_value = MagicMock()
         
-        self.model_handler = ModelHandler("gpt2")
+        self.model_handler = ModelHandler("CohereForAI/c4ai-command-r-plus")
 
     def test_initialization(self):
         self.assertIsNotNone(self.model_handler.tokenizer)
-        self.assertIsNotNone(self.model_handler.model_parts)
+        self.assertIsNotNone(self.model_handler.model)
 
     @patch('model_utils.ModelHandler._load_model_part', return_value=MagicMock())
     @patch('model_utils.open', new_callable=mock_open)  # Mock open to handle file operations
