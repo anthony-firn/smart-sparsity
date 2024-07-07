@@ -40,8 +40,15 @@ else
     echo "Rust is already installed"
 fi
 
-# Create .env file for act
-echo "Creating .env file for act..."
-echo "LOCAL_RUN=true" > .env
+# Create event.json file for act
+echo "Creating event.json file for act..."
+cat <<EOT > event.json
+{
+  "event_name": "workflow_dispatch",
+  "inputs": {
+    "run_intensive_tests": "true"
+  }
+}
+EOT
 
-echo "Setup complete. You can now run local-test.sh to execute the tests."
+echo "Setup complete. You can now run 'local-tests.sh' to execute the tests."
