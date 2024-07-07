@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, mock_open
 from model_utils import ModelHandler
+import os
 
 class TestModelHandler(unittest.TestCase):
 
@@ -24,9 +25,12 @@ class TestModelHandler(unittest.TestCase):
         self.assertIsNotNone(self.model_handler.model_parts)
 
     @patch('model_utils.ModelHandler._load_model_part', return_value=MagicMock())
-    def test_inference(self, MockLoadModelPart):
+    @patch('model_utils.open', new_callable=mock_open)  # Mock open to handle file operations
+    def test_inference(self, MockOpen, MockLoadModelPart):
         input_text = "Hello, world!"
-        output = self.model_handler.run_inference(input_text)
+        with patch('model_utils.os.path.getsize', return_value=100):  # Ensure getsize returns a value
+            with patch('model_utils.os.path.exists', return_value=True):  # Ensure exists returns True
+                output = self.model_handler.run_inference(input_text)
         self.assertEqual(output, "Mocked output")
 
 if __name__ == '__main__':
