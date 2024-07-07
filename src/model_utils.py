@@ -14,7 +14,8 @@ class ModelHandler:
         model = AutoModelForCausalLM.from_pretrained(model_name)
         # Simulating splitting the model into parts
         model_parts = ["part1.pth", "part2.pth", "part3.pth"]
-        torch.save(model, model_parts[0])  # Save the entire model as part1 for simplicity
+        if not os.path.exists(model_parts[0]):  # Save the entire model as part1 for simplicity only if it doesn't exist
+            torch.save(model, model_parts[0])
         return model_parts
 
     def run_inference(self, input_text):
