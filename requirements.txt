@@ -3,6 +3,7 @@ kivy==2.1.0
 psutil==5.8.0
 torch==2.3.1
 transformers==4.25.1
+tokenizers==0.10.3  # Adding a specific version for tokenizers
 
 # Optional dependencies for building the app (e.g., PyInstaller)
 pyinstaller==4.5.1
