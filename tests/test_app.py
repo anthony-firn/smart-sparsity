@@ -1,10 +1,14 @@
 import unittest
+from unittest.mock import patch, MagicMock
 from kivy.uix.textinput import TextInput
 from app import ChatApp
 
 class TestChatApp(unittest.TestCase):
 
-    def setUp(self):
+    @patch('app.ModelHandler')
+    def setUp(self, MockModelHandler):
+        mock_model_handler = MockModelHandler.return_value
+        mock_model_handler.run_inference.return_value = "Mocked response"
         self.app = ChatApp()
         self.app.build()
 
@@ -18,7 +22,7 @@ class TestChatApp(unittest.TestCase):
         self.app.input_text.text = input_text
         self.app.send_message(None)
         output = self.app.output_label.text
-        self.assertGreater(len(output), 0)
+        self.assertEqual(output, "Mocked response")
 
 if __name__ == '__main__':
     unittest.main()

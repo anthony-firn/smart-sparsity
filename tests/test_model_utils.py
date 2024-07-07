@@ -1,10 +1,15 @@
 import unittest
+from unittest.mock import patch, MagicMock
 from model_utils import ModelHandler
 
 class TestModelHandler(unittest.TestCase):
 
-    def setUp(self):
-        self.model_handler = ModelHandler("path_to_dummy_model")
+    @patch('model_utils.AutoTokenizer.from_pretrained')
+    def setUp(self, MockAutoTokenizer):
+        mock_tokenizer = MockAutoTokenizer.return_value
+        mock_tokenizer.encode.return_value = [101, 102]
+        mock_tokenizer.decode.return_value = "Mocked output"
+        self.model_handler = ModelHandler("distilbert-base-uncased")
 
     def test_initialization(self):
         self.assertIsNotNone(self.model_handler.tokenizer)
@@ -13,8 +18,7 @@ class TestModelHandler(unittest.TestCase):
     def test_inference(self):
         input_text = "Hello, world!"
         output = self.model_handler.run_inference(input_text)
-        self.assertIsInstance(output, str)
-        self.assertGreater(len(output), 0)
+        self.assertEqual(output, "Mocked output")
 
 if __name__ == '__main__':
     unittest.main()
